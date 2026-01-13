@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>College Management System</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      margin: 0;
+      background: linear-gradient(120deg, #74ebd5, #9face6);
+      color: #333;
+    }
+
+    header {
+      background: rgba(44, 62, 80, 0.9);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      box-shadow: 0px 3px 10px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      margin-top: 15px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #ecf0f1;
+      margin: 0 15px;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    nav a:hover {
+      background: #f39c12;
+      color: #fff;
+    }
+
+    main {
+      padding: 40px;
+      text-align: center;
+    }
+
+    main h2 {
+      font-size: 2em;
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+
+    main p {
+      font-size: 1.2em;
+      max-width: 600px;
+      margin: auto;
+      line-height: 1.6;
+    }
+
+    .card-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+      width: 250px;
+      padding: 20px;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(10px);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: #34495e;
+    }
+
+    footer {
+      background: rgba(44, 62, 80, 0.9);
+      color: white;
+      padding: 15px;
+      text-align: center;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>College Management System</h1>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/students">Students</a>
+      <a href="/courses">Courses</a>
+      <a href="/about">About</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Manage Your College Efficiently</h2>
+    <p>Welcome to the College Management System. Keep track of students, courses, and other important records in one place.</p>
+
+    <div class="card-container">
+      <div class="card">
+       <a href="/students"> <h3>👨‍🎓 Students</h3></a>
+        <p>View and manage student information easily.</p>
+      </div>
+      <div class="card">
+       <a href="/courses"> <h3>📘 Courses</h3></a>
+        <p>Explore and update available courses.</p>
+      </div>
+      <div class="card">
+        <a href="/about"><h3>ℹ️ About</h3></a>
+        <p>Learn more about this management system.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 College Management System</p>
+  </footer>
+</body>
+</html>

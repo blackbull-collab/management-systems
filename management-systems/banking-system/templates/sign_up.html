@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VIT Bank Register</title>
+    <link rel="stylesheet" href="/static/sign_up.css">
+</head>
+<body>
+    <div class="title"><h1><center>VIT Bank</center></h1></div>
+    <center>
+        <div class="in_box">
+            <h2 class="signup">Sign-Up</h2><br>
+
+            <!-- Registration Form -->
+            <form class="indetails" method="POST" action="/register">
+                <table>
+                    <tr>
+                        <td><h3>Name</h3></td>
+                        <td><input type="text" name="name" required></td>
+                    </tr>
+                    <tr>
+                        <td><h3>PIN</h3></td>
+                        <td><input type="password" name="pin" required></td>
+                    </tr>
+                    <tr>
+                        <td><h3>Confirm PIN</h3></td>
+                        <td><input type="password" name="cpin" required></td>
+                    </tr>
+                    <tr>
+                        <td><h3>Age</h3></td>
+                        <td><input type="number" name="age"></td>
+                    </tr>
+                    <tr>
+                        <td><h3>Account Number</h3></td>
+                        <td><input type="text" name="account_number"></td>
+                    </tr>
+                    <tr>
+                        <td><h3>Branch Name</h3></td>
+                        <td><input type="text" name="branch"></td>
+                    </tr>
+                </table>
+                <center><button class="inbtn" type="submit"><h3>Register</h3></button></center>
+            </form>
+
+            <!-- Link to Sign In -->
+            <div style="margin-top:18px;">
+                <a href="/signin" style="color:#EEEAFB;">Already have an account? Sign in</a>
+            </div>
+        </div>
+    </center>
+</body>
+</html>

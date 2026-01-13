@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VIT Bank Sign In</title>
+    <link href="/static/sign_in.css" rel="stylesheet">
+</head>
+<body>
+    <div class="title"><h1><center>VIT Bank</center></h1></div>
+    <center>
+        <div class="in_box">
+            <h2>Sign in</h2><br>
+
+            <!-- Login Form -->
+            <form class="indetails" method="POST" action="/login">
+                <table>
+                    <tr>
+                        <td><h3>Name</h3></td>
+                        <td><input type="text" name="name" required></td>
+                    </tr>
+                    <tr>
+                        <td><h3>PIN</h3></td>
+                        <td><input type="password" name="pin" required></td>
+                    </tr>
+                </table>
+                <button class="inbtn" type="submit"><h3>Let's In</h3></button>
+            </form>
+
+            <!-- Link back to Register -->
+            <div style="margin-top:18px;">
+                <a href="/" style="color:#EEEAFB;">Create an account</a>
+            </div>
+        </div>
+    </center>
+</body>
+</html>

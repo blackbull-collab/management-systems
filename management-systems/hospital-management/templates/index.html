@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital Management System</title>
+</head>
+<body>
+    <h1>Hospital Management System</h1>
+
+    <h2>Register</h2>
+    <input id="r_username" placeholder="Username">
+    <input id="r_password" placeholder="Password" type="password">
+    <input id="r_role" placeholder="Role (Doctor/Patient)">
+    <button onclick="register()">Register</button>
+
+    <h2>Login</h2>
+    <input id="l_username" placeholder="Username">
+    <input id="l_password" placeholder="Password" type="password">
+    <button onclick="login()">Login</button>
+
+    <h2>Appointments</h2>
+    <div id="appointments"></div>
+
+    <h3>Book Appointment</h3>
+    <input id="doctor" placeholder="Doctor Name">
+    <input id="patient" placeholder="Patient Name">
+    <input id="date" type="date">
+    <input id="time" type="time">
+    <input id="type" placeholder="Type">
+    <button onclick="bookAppointment()">Book</button>
+
+    <script>
+        const API_BASE = "http://127.0.0.1:5000/api";
+
+        async function register() {
+            const res = await fetch(API_BASE + "/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: document.getElementById("r_username").value,
+                    password: document.getElementById("r_password").value,
+                    role: document.getElementById("r_role").value,
+                })
+            });
+            const data = await res.json();
+            alert(data.message || (data.isOk ? "Registered!" : "Failed"));
+        }
+
+        async function login() {
+            const res = await fetch(API_BASE + "/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    username: document.getElementById("l_username").value,
+                    password: document.getElementById("l_password").value
+                })
+            });
+            const data = await res.json();
+            if (data.isOk) {
+                alert("Welcome " + data.user.username);
+                loadAppointments();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        async function loadAppointments() {
+            const res = await fetch(API_BASE + "/appointments");
+            const data = await res.json();
+            const div = document.getElementById("appointments");
+            div.innerHTML = data.appointments.map(a =>
+                `<p>${a.patient_name} → ${a.doctor_name} (${a.appointment_date} ${a.appointment_time})</p>`
+            ).join("");
+        }
+
+        async function bookAppointment() {
+            const res = await fetch(API_BASE + "/appointments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    doctor_name: document.getElementById("doctor").value,
+                    patient_name: document.getElementById("patient").value,
+                    appointment_date: document.getElementById("date").value,
+                    appointment_time: document.getElementById("time").value,
+                    appointment_type: document.getElementById("type").value
+                })
+            });
+            const data = await res.json();
+            if (data.isOk) {
+                alert("Appointment booked!");
+                loadAppointments();
+            } else {
+                alert("Error booking appointment.");
+            }
+        }
+    </script>
+</body>
+</html>
+

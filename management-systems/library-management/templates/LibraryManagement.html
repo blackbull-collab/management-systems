@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e40af;
+            --accent: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            transform: translateY(-2px);
+        }
+        
+        .book-card, .member-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .book-card:hover, .member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+        
+        .modal {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-book text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-gray-800">LibraryPro</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#dashboard" class="nav-item text-gray-600 hover:text-blue-600 font-medium">Dashboard</a>
+                    <a href="#books" class="nav-item text-gray-600 hover:text-blue-600 font-medium">Books</a>
+                    <a href="#members" class="nav-item text-gray-600 hover:text-blue-600 font-medium">Members</a>
+                    <a href="#transactions" class="nav-item text-gray-600 hover:text-blue-600 font-medium">Transactions</a>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-user mr-2"></i>Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="mb-12 fade-in">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Dashboard Overview</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card rounded-xl p-6 text-center">
+                    <i class="fas fa-book text-3xl mb-3"></i>
+                    <h3 class="text-2xl font-bold">2,847</h3>
+                    <p class="text-blue-100">Total Books</p>
+                </div>
+                
+                <div class="stat-card rounded-xl p-6 text-center">
+                    <i class="fas fa-users text-3xl mb-3"></i>
+                    <h3 class="text-2xl font-bold">1,234</h3>
+                    <p class="text-blue-100">Active Members</p>
+                </div>
+                
+                <div class="stat-card rounded-xl p-6 text-center">
+                    <i class="fas fa-exchange-alt text-3xl mb-3"></i>
+                    <h3 class="text-2xl font-bold">567</h3>
+                    <p class="text-blue-100">Borrowed Books</p>
+                </div>
+'                
+                <div class="stat-card rounded-xl p-6 text-center">
+                    <i class="fas fa-clock text-3xl mb-3"></i>
+                    <h3 class="text-2xl font-bold">89</h3>
+                    <p class="text-blue-100">Overdue Returns</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Recent Activities</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-book text-green-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">New book added</p>
+                                    <p class="text-sm text-gray-500">"The Great Gatsby" by F. Scott Fitzgerald</p>
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500">2 hours ago</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <i class="fas fa-user-check text-blue-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">New member registered</p>
+                                    <p class="text-sm text-gray-500">John Doe (ID: M00345)</p>
+                                </div>
+                            </div>
+                            <span class="text-sm text-gray-500">5 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl p-6 shadow-lg">
+                    <h3 class="text-xl font-semibold mb-4">Quick Actions</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button onclick="showModal('addBookModal')" class="bg-blue-600 text-white p-4 rounded-lg text-center hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-plus text-2xl mb-2"></i>
+                            <p>Add Book</p>
+                        </button>
+                        <button onclick="showModal('addMemberModal')" class="bg-green-600 text-white p-4 rounded-lg text-center hover:bg-green-700 transition-colors">
+                            <i class="fas fa-user-plus text-2xl mb-2"></i>
+                            <p>Add Member</p>
+                        </button>
+                        <button onclick="showModal('borrowModal')" class="bg-purple-600 text-white p-4 rounded-lg text-center hover:bg-purple-700 transition-colors">
+                            <i class="fas fa-hand-holding text-2xl mb-2"></i>
+                            <p>Borrow Book</p>
+                        </button>
+                        <button onclick="showModal('returnModal')" class="bg-orange-600 text-white p-4 rounded-lg text-center hover:bg-orange-700 transition-colors">
+                            <i class="fas fa-undo text-2xl mb-2"></i>
+                            <p>Return Book</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Books Section -->
+        <section id="books" class="mb-12 fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Book Management</h2>
+                <button onclick="showModal('addBookModal')" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                    <i class="fas fa-plus mr-2"></i> Add Book
+                </button>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-lg mb-6">
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <input type="text" placeholder="Search books..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>All Categories</option>
+                        <option>Fiction</option>
+                        <option>Non-Fiction</option>
+                        <option>Science</option>
+                        <option>History</option>
+                    </select>
+                    <button class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-search mr-2"></i> Search
+                    </button>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="booksContainer">
+                    <!-- Books will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Members Section -->
+        <section id="members" class="mb-12 fade-in">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Member Management</h2>
+                <button onclick="showModal('addMemberModal')" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center">
+                    <i class="fas fa-user-plus mr-2"></i> Add Member
+                </button>
+            </div>
+            
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="membersTable">
+                            <!-- Members will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transactions Section -->
+        <section id="transactions" class="mb-12 fade-in">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">Transaction History</h2>
+            
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <div class="mb-6 flex flex-col md:flex-row gap-4">
+                    <input type="text" placeholder="Search transactions..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option>All Transactions</option>
+                        <option>Borrowed</option>
+                        <option>Returned</option>
+                        <option>Overdue</option>
+                    </select>
+                    <button class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-filter mr-2"></i> Filter
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Transaction ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="transactionsTable">
+                            <!-- Transactions will be dynamically loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <!-- Add Book Modal -->
+    <div id="addBookModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Add New Book</h3>
+                <button onclick="hideModal('addBookModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addBookForm" onsubmit="addBook(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option>Fiction</option>
+                            <option>Non-Fiction</option>
+                            <option>Science</option>
+                            <option>History</option>
+                            <option>Biography</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Publication Year</label>
+                        <input type="number" min="1000" max="2024" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="hideModal('addBookModal')" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700">Add Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Member Modal -->
+    <div id="addMemberModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Add New Member</h3>
+                <button onclick="hideModal('addMemberModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="addMemberForm" onsubmit="addMember(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+                        <input type="tel" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                        <textarea class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="hideModal('addMemberModal')" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Borrow Book Modal -->
+    <div id="borrowModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Borrow Book</h3>
+                <button onclick="hideModal('borrowModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="borrowForm" onsubmit="borrowBook(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Select Book</label>
+                        <select required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Choose a book...</option>
+                            <option>The Great Gatsby</option>
+                            <option>To Kill a Mockingbird</option>
+                            <option>1984</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Select Member</label>
+                        <select required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Choose a member...</option>
+                            <option>John Doe (M001)</option>
+                            <option>Jane Smith (M002)</option>
+                            <option>Bob Johnson (M003)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Due Date</label>
+                        <input type="date" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="hideModal('borrowModal')" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                    <button type="submit" class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700">Borrow Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Return Book Modal -->
+    <div id="returnModal" class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl p-6 w-full max-w-md">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-semibold">Return Book</h3>
+                <button onclick="hideModal('returnModal')" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="returnForm" onsubmit="returnBook(event)">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Select Borrowed Book</label>
+                        <select required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">Choose a borrowed book...</option>
+                            <option>The Great Gatsby - Borrowed by John Doe</option>
+                            <option>1984 - Borrowed by Jane Smith</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Return Condition</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option>Good</option>
+                            <option>Damaged</option>
+                            <option>Lost</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="hideModal('returnModal')" class="px-4 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
+                    <button type="submit" class="bg-orange-600 text-white px-6 py-2 rounded-lg hover:bg-orange-700">Return Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        const sampleBooks = [
+            { id: 1, title: "The Great Gatsby", author: "F. Scott Fitzgerald", isbn: "9780743273565", category: "Fiction", year: 1925, available: true },
+            { id: 2, title: "To Kill a Mockingbird", author: "Harper Lee", isbn: "9780061120084", category: "Fiction", year: 1960, available: false },
+            { id: 3, title: "1984", author: "George Orwell", isbn: "9780451524935", category: "Fiction", year: 1949, available: true },
+            { id: 4, title: "A Brief History of Time", author: "Stephen Hawking", isbn: "9780553380163", category: "Science", year: 1988, available: true }
+        ];
+
+        const sampleMembers = [
+            { id: 1, name: "John Doe", email: "john@example.com", phone: "555-0101", status: "Active" },
+            { id: 2, name: "Jane Smith", email: "jane@example.com", phone: "555-0102", status: "Active" },
+            { id: 3, name: "Bob Johnson", email: "bob@example.com", phone: "555-0103", status: "Inactive" }
+        ];
+
+        const sampleTransactions = [
+            { id: 1, book: "The Great Gatsby", member: "John Doe", type: "Borrow", date: "2024-01-15", dueDate: "2024-01-29", status: "Overdue" },
+            { id: 2, book: "1984", member: "Jane Smith", type: "Borrow", date: "2024-01-20", dueDate: "2024-02-03", status: "Active" },
+            { id: 3, book: "To Kill a Mockingbird", type: "Return", date: "2024-01-10", status: "Completed" }
+        ];
+
+        // Initialize data
+        function initializeData() {
+            if (!localStorage.getItem('books')) {
+                localStorage.setItem('books', JSON.stringify(sampleBooks));
+            }
+            if (!localStorage.getItem('members')) {
+                localStorage.setItem('members', JSON.stringify(sampleMembers));
+            }
+            if (!localStorage.getItem('transactions')) {
+                localStorage.setItem('transactions', JSON.stringify(sampleTransactions));
+            }
+        }
+
+        // Get data from localStorage
+        function getBooks() {
+            return JSON.parse(localStorage.getItem('books') || '[]');
+        }
+
+        function getMembers() {
+            return JSON.parse(localStorage.getItem('members') || '[]');
+        }
+
+        function getTransactions() {
+            return JSON.parse(localStorage.getItem('transactions') || '[]');
+        }
+
+        // Save data to localStorage
+        function saveBooks(books) {
+            localStorage.setItem('books', JSON.stringify(books));
+        }
+
+        function saveMembers(members) {
+            localStorage.setItem('members', JSON.stringify(members));
+        }
+
+        function saveTransactions(transactions) {
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Add new book
+        function addBook(event) {
+            event.preventDefault();
+            const form = event.target;
+            const books = getBooks();
+            
+            const newBook = {
+                id: Date.now(),
+                title: form[0].value,
+                author: form[1].value,
+                isbn: form[2].value,
+                category: form[3].value,
+                year: parseInt(form[4].value),
+                available: true
+            };
+            
+            books.push(newBook);
+            saveBooks(books);
+            hideModal('addBookModal');
+            form.reset();
+            renderBooks();
+            alert('Book added successfully!');
+        }
+
+        // Add new member
+        function addMember(event) {
+            event.preventDefault();
+            const form = event.target;
+            const members = getMembers();
+            
+            const newMember = {
+                id: Date.now(),
+                name: form[0].value,
+                email: form[1].value,
+                phone: form[2].value,
+                address: form[3].value,
+                status: "Active"
+            };
+            
+            members.push(newMember);
+            saveMembers(members);
+            hideModal('addMemberModal');
+            form.reset();
+            renderMembers();
+            alert('Member added successfully!');
+        }
+
+        // Borrow book
+        function borrowBook(event) {
+            event.preventDefault();
+            hideModal('borrowModal');
+            alert('Book borrowed successfully!');
+        }
+
+        // Return book
+        function returnBook(event) {
+            event.preventDefault();
+            hideModal('returnModal');
+            alert('Book returned successfully!');
+        }
+
+        // Render books
+        function renderBooks() {
+            const books = getBooks();
+            const container = document.getElementById('booksContainer');
+            
+            container.innerHTML = books.map(book => `
+                <div class="book-card bg-white rounded-xl p-4 border border-gray-200">
+                    <div class="flex items-start justify-between mb-3">
+                        <h4 class="font-semibold text-lg text-gray-800">${book.title}</h4>
+                        <span class="px-2 py-1 text-xs rounded-full ${book.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${book.available ? 'Available' : 'Borrowed'}
+                        </span>
+                    </div>
+                    <p class="text-gray-600 mb-2">by ${book.author}</p>
+                    <div class="text-sm text-gray-500 mb-4">
+                        <p>ISBN: ${book.isbn}</p>
+                        <p>Category: ${book.category}</p>
+                        <p>Year: ${book.year}</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="flex-1 bg-blue-100 text-blue-700 py-2 rounded-lg text-sm hover:bg-blue-200">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </button>
+                        <button class="flex-1 bg-red-100 text-red-700 py-2 rounded-lg text-sm hover:bg-red-200">
+                            <i class="fas fa-trash mr-1"></i> Delete
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render members
+        function renderMembers() {
+            const members = getMembers();
+            const table = document.getElementById('membersTable');
+            
+            table.innerHTML = members.map(member => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">M${String(member.id).padStart(3, '0')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${member.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${member.email}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${member.phone}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs rounded-full ${member.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                            ${member.status}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button class="text-blue-600 hover:text-blue-900 mr-3">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render transactions
+        function renderTransactions() {
+            const transactions = getTransactions();
+            const table = document.getElementById('transactionsTable');
+            
+            table.innerHTML = transactions.map(transaction => `
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">T${String(transaction.id).padStart(3, '0')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${transaction.book}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${transaction.member || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs rounded-full ${transaction.type === 'Borrow' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}">
+                            ${transaction.type}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">${transaction.date}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${transaction.dueDate || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs rounded-full ${
+                            transaction.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                            transaction.status === 'Overdue' ? 'bg-red-100 text-red-800' : 
+                            'bg-gray-100 text-gray-800'
+                        }">
+                            ${transaction.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialize the application
+        function initApp() {
+            initializeData();
+            renderBooks();
+            renderMembers();
+            renderTransactions();
+        }
+
+        // Start the application when the page loads
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+
+<script>
+// --- API bridge: replaces localStorage-based data functions with API calls ---
+async function initializeData() {
+    // No-op: server will have seeded DB via migrations
+    return;
+}
+
+async function getBooks() {
+    const res = await fetch('/api/books');
+    return res.ok ? await res.json() : [];
+}
+
+async function getMembers() {
+    const res = await fetch('/api/members');
+    return res.ok ? await res.json() : [];
+}
+
+async function getTransactions() {
+    const res = await fetch('/api/transactions');
+    return res.ok ? await res.json() : [];
+}
+
+async function saveBooks(books) {
+    // Not used - operations call dedicated endpoints
+    return;
+}
+
+async function saveMembers(members) {
+    return;
+}
+
+async function saveTransactions(transactions) {
+    return;
+}
+
+// Override addBook to call backend
+async function addBook(event) {
+    event.preventDefault();
+    const form = event.target;
+    const payload = {
+        title: form[0].value,
+        author: form[1].value,
+        isbn: form[2].value,
+        category: form[3].value,
+        year: parseInt(form[4].value) || null,
+        available: true
+    };
+    const res = await fetch('/api/books', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+        hideModal('addBookModal');
+        form.reset();
+        await renderBooks();
+        alert('Book added successfully!');
+    } else {
+        alert('Failed to add book');
+    }
+}
+
+// Override addMember to call backend
+async function addMember(event) {
+    event.preventDefault();
+    const form = event.target;
+    const payload = {
+        name: form[0].value,
+        email: form[1].value,
+        phone: form[2].value,
+        address: form[3].value
+    };
+    const res = await fetch('/api/members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+        hideModal('addMemberModal');
+        form.reset();
+        await renderMembers();
+        alert('Member added successfully!');
+    } else {
+        alert('Failed to add member');
+    }
+}
+
+// Borrow book: create transaction and mark book unavailable
+async function borrowBook(event) {
+    event.preventDefault();
+    const form = event.target;
+    const bookTitle = form[0].value;
+    const memberName = form[1].value;
+    const dueDate = form[2].value;
+    const payload = { book: bookTitle, member: memberName, type: 'Borrow', date: new Date().toISOString().slice(0,10), dueDate, status: 'Active' };
+    const res = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+        hideModal('borrowModal');
+        await renderBooks();
+        await renderTransactions();
+        alert('Book borrowed successfully!');
+    } else {
+        alert('Failed to borrow book');
+    }
+}
+
+// Return book: create Return transaction and update status
+async function returnBook(event) {
+    event.preventDefault();
+    const form = event.target;
+    const borrowed = form[0].value; // e.g., "The Great Gatsby - Borrowed by John Doe"
+    const condition = form[1].value;
+    // Extract title and member if possible
+    const parts = borrowed.split(' - Borrowed by ');
+    const title = parts[0] || borrowed;
+    const member = parts[1] || '';
+    // Create return transaction
+    const payload = { book: title, member, type: 'Return', date: new Date().toISOString().slice(0,10), status: 'Completed', condition };
+    const res = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+        hideModal('returnModal');
+        await renderBooks();
+        await renderTransactions();
+        alert('Book returned successfully!');
+    } else {
+        alert('Failed to return book');
+    }
+}
+
+// Render helpers adapted to async API calls
+async function renderBooks() {
+    const books = await getBooks();
+    const container = document.getElementById('booksContainer');
+    container.innerHTML = (books || []).map(book => `
+        <div class="book-card bg-white rounded-xl p-4 border border-gray-200">
+            <div class="flex items-start justify-between mb-3">
+                <h4 class="font-semibold text-lg text-gray-800">${book.title}</h4>
+                <span class="px-2 py-1 text-xs rounded-full ${book.available ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                    ${book.available ? 'Available' : 'Borrowed'}
+                </span>
+            </div>
+            <p class="text-gray-600 mb-2">by ${book.author}</p>
+            <div class="text-sm text-gray-500 mb-4">
+                <p>ISBN: ${book.isbn}</p>
+                <p>Category: ${book.category}</p>
+                <p>Year: ${book.year || '-'}</p>
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="editBook(${book.id})" class="flex-1 bg-blue-100 text-blue-700 py-2 rounded-lg text-sm hover:bg-blue-200">
+                    <i class="fas fa-edit mr-1"></i> Edit
+                </button>
+                <button onclick="deleteBook(${book.id})" class="flex-1 bg-red-100 text-red-700 py-2 rounded-lg text-sm hover:bg-red-200">
+                    <i class="fas fa-trash mr-1"></i> Delete
+                </button>
+            </div>
+        </div>
+    `).join('');
+    // Also update borrow/return selects
+    const borrowSelect = document.querySelector('#borrowModal select');
+    if (borrowSelect) {
+        borrowSelect.innerHTML = '<option value="">Choose a book...</option>' + (books || []).filter(b=>b.available).map(b=>`<option>${b.title}</option>`).join('');
+    }
+    const returnSelect = document.querySelector('#returnModal select');
+    if (returnSelect) {
+        // list borrowed books
+        const tx = await getTransactions();
+        const borrowed = (tx || []).filter(t => t.type === 'Borrow' && t.status === 'Active');
+        returnSelect.innerHTML = '<option value="">Choose a borrowed book...</option>' + borrowed.map(b=>`<option>${b.book} - Borrowed by ${b.member}</option>`).join('');
+    }
+}
+
+async function renderMembers() {
+    const members = await getMembers();
+    const table = document.getElementById('membersTable');
+    table.innerHTML = (members || []).map(member => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap">M${String(member.id).padStart(3, '0')}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${member.name}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${member.email}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${member.phone}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs rounded-full ${member.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                    ${member.status}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <button class="text-blue-600 hover:text-blue-900 mr-3">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="text-red-600 hover:text-red-900" onclick="deleteMember(${member.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+    `).join('');
+    // update borrow modal members select
+    const sel = document.querySelector('#borrowModal select:nth-of-type(2)');
+    if (sel) sel.innerHTML = '<option value="">Choose a member...</option>' + (members || []).map(m=>`<option>${m.name}</option>`).join('');
+}
+
+async function renderTransactions() {
+    const transactions = await getTransactions();
+    const table = document.getElementById('transactionsTable');
+    table.innerHTML = (transactions || []).map(transaction => `
+        <tr>
+            <td class="px-6 py-4 whitespace-nowrap">T${String(transaction.id).padStart(3, '0')}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${transaction.book}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${transaction.member || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs rounded-full ${transaction.type === 'Borrow' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}">
+                    ${transaction.type}
+                </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">${transaction.date}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${transaction.dueDate || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 text-xs rounded-full ${transaction.status === 'Active' ? 'bg-green-100 text-green-800' : transaction.status === 'Overdue' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}">
+                    ${transaction.status}
+                </span>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Delete helpers
+async function deleteBook(id) {
+    if (!confirm('Delete this book?')) return;
+    const res = await fetch('/api/books/' + id, { method: 'DELETE' });
+    if (res.ok) {
+        await renderBooks();
+    } else alert('Failed to delete');
+}
+async function deleteMember(id) {
+    if (!confirm('Delete this member?')) return;
+    const res = await fetch('/api/members/' + id, { method: 'DELETE' });
+    if (res.ok) await renderMembers(); else alert('Failed to delete');
+}
+
+// Basic editBook placeholder (opens modal prefilled could be implemented)
+function editBook(id) {
+    alert('Edit book feature not implemented in this demo.');
+}
+
+// Initialize UI after DOM loads
+document.addEventListener('DOMContentLoaded', async () => {
+    await initializeData();
+    await renderBooks();
+    await renderMembers();
+    await renderTransactions();
+});
+</script>
+</body>
+</html>

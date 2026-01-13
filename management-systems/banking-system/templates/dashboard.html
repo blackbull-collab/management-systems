@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Banking Dashboard - VIT Bank</title>
+  <link href="/static/dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+  <center><h1 class="title">VIT-Bank Dashboard</h1></center>
+
+  <div class="dashboard">
+
+    <!-- Profile Section -->
+    <section class="profile">
+      <img src="https://ui-avatars.com/api/?name={{ user['name'] | replace(' ', '+') }}" alt="Profile Picture" />
+      <h2>{{ user['name'] }}</h2>
+      <p>{{ user['branch'] or 'No branch' }}</p>
+      <div class="account-number">Account # {{ user['account_number'] }}</div>
+      <div style="margin-top:12px;"><a href="/logout" style="color:#f3e8ff;">Logout</a></div>
+    </section>
+
+    <!-- Transactions Section -->
+    <section class="transactions">
+      <h3>Transaction History</h3>
+      <div class="transaction-list">
+        {% if transactions %}
+          {% for t in transactions %}
+            <div class="transaction-item {{ 'deposit' if t['type']=='deposit' else 'withdrawal' }}">
+              <span>{{ t['type']|capitalize }} - {{ t['label'] }}</span>
+              <span>{{ '+' if t['type']=='deposit' else '-' }} ${{ '%.2f'|format(t['amount']) }}</span>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="transaction-item">
+            <span>No transactions yet</span>
+            <span>—</span>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Deposit and Withdraw Forms -->
+      <div class="actions">
+        <form method="POST" action="/txn/deposit" style="flex:1;">
+          <input type="number" step="0.01" name="amount" placeholder="Amount">
+          <input type="hidden" name="label" value="Deposit">
+          <button class="deposit-btn" type="submit">Deposit</button>
+        </form>
+        <form method="POST" action="/txn/withdraw" style="flex:1;">
+          <input type="number" step="0.01" name="amount" placeholder="Amount">
+          <input type="hidden" name="label" value="Withdraw">
+          <button class="withdraw-btn" type="submit">Withdraw</button>
+        </form>
+      </div>
+
+      <div class="balance">
+        Current Balance: ${{ '%.2f'|format(balance) }}
+      </div>
+    </section>
+  </div>
+</body>
+</html>
